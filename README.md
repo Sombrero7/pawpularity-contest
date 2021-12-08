@@ -15,30 +15,15 @@ Currently, PetFinder.my uses a basic Cuteness Meter to rank pet photos. It analy
 
 ## Technical Understanding
 
-In this notebook, we will first explore the data given to us from petfinder.my. We will look at the characteristics of our data in a piecemeal approach for maximum understanding before visualizing each against our target variable, pawpularity. Next, we will go through an iterative modeling process. Since this a regression task, we have elected to use RMSE as our performance metric. We will eventually converge on a final model after exhausting our resources to our best abilities. Finally, we will analyze our results, draw conclusions, and make suggestions on where to iterate on our current process for improvements. 
+In this project, we will first explore the data given to us from petfinder.my. We will look at the characteristics of our data in a piecemeal approach for maximum understanding before visualizing each against our target variable, pawpularity. Next, we will go through an iterative modeling process. Since this a regression task, we have elected to use RMSE as our performance metric. We will eventually converge on a final model after exhausting our resources to our best abilities. Finally, we will analyze our results, draw conclusions, and make suggestions on where to iterate on our current process for improvements. 
 
 ## Data Understanding
 
-For this project, we have historical data from the PetFinder.my website composed of almost 10,000 images and hand-labeled metadata per image. We'll begin by investigating the metadata data set, then move on to the corresponding images data set. 
+For this project, we have historical data from the PetFinder.my website composed of almost 10,000 images and hand-labeled metadata per image. 
 
-### Metadata Dataset
-
-In this section, we will put the Metadata under the microscope, seraching for trends between its features and our target. 
+Here is a preview of the metadata. 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -149,30 +134,6 @@ In this section, we will put the Metadata under the microscope, seraching for tr
 </table>
 </div>
 
-
-    <class 'pandas.core.frame.DataFrame'>
-    RangeIndex: 9912 entries, 0 to 9911
-    Data columns (total 14 columns):
-     #   Column         Non-Null Count  Dtype 
-    ---  ------         --------------  ----- 
-     0   Id             9912 non-null   object
-     1   Subject Focus  9912 non-null   int64 
-     2   Eyes           9912 non-null   int64 
-     3   Face           9912 non-null   int64 
-     4   Near           9912 non-null   int64 
-     5   Action         9912 non-null   int64 
-     6   Accessory      9912 non-null   int64 
-     7   Group          9912 non-null   int64 
-     8   Collage        9912 non-null   int64 
-     9   Human          9912 non-null   int64 
-     10  Occlusion      9912 non-null   int64 
-     11  Info           9912 non-null   int64 
-     12  Blur           9912 non-null   int64 
-     13  Pawpularity    9912 non-null   int64 
-    dtypes: int64(13), object(1)
-    memory usage: 1.1+ MB
-
-
 Our dataset consists of 13 features and 1 target. For the sake of clarity, we will enumerate each feature and what it represents:
 <ol>
     <u>Feature Columns</u>
@@ -251,45 +212,8 @@ Let's take a look at the target variable, pawpularity score.
 ![png](README-images/output_28_0.png)
 
 
-![png](README-images/output_29_0.png)
 
-
-It appears as though we are dealing with a relatively normally distributed target variable, which is always great news. Since the distribution is skewed right, we might consider applying a square root or log transform in order to achieve a higher degree of normality. As we might have expected from the heavy right-tail of the histogram, our target data contains several outlier values in the range of higher values. It might benefit us to take a look at the outlier distribution as well. If time permits, there could be value in exploring a classifier model that can predict where the sample is an outlier. In the meantime, let's take a look at our outlier-valued samples. 
-
-![png](README-images/output_31_1.png)
-
-
-    Value Counts Per Pawpularity Score:
-    - - - - - - - - - - - - - - - - - -
-    78     22 
-    79     24 
-    80     17 
-    81     27 
-    82     14 
-    83     24 
-    84     18 
-    85     16 
-    86     14 
-    87     19 
-    88     21 
-    89     13 
-    90     7  
-    91     15 
-    92     14 
-    93     13 
-    94     13 
-    95     11 
-    96     12 
-    97     8  
-    98     10 
-    99     4  
-    100    288
-    Name: Pawpularity, dtype: int64
-    
-    Total Number of Outliers: 624
-
-
-Our outliers are uniformly distributed, except for at 100, where we have 288 values. Again, we might take a closer look at how we incorporate our ouliers in training later on in the modeling process if we don't achieve the level of performance that we are aiming for. But because there are so many 100-valued samples (as well as others, appx. 6% of our dataset), we cannot simply disregard them; again, it might be worth it to revisit the concept of creating a classification model designed to detect outliers, or 100-valued targets. 
+It appears as though we are dealing with a relatively normally distributed target variable, which is always great news. Since the distribution is skewed right, we might consider applying a square root or log transform in order to achieve a higher degree of normality. As we might have expected from the heavy right-tail of the histogram, our target data contains several outlier values in the range of higher values. It might benefit us to take a look at the outlier distribution as well.
 
 ### Metadata Classification Datasets
 
@@ -331,8 +255,6 @@ Note that it might be convenient to mix and match some of these datasets - we'll
 
 ### Regression Modeling with Metadata
 
-We will begin our modeling process by first establishing a baseline to go off. Then, we will iterate and optimize several different models on strictly the metadata. After we are confident that we have totally exhausted the metadata, we will move on to modeling using ANNs on the image data. 
-
 Because this is a regression project, we have decided on using RMSE as our performance metric. Based on performance of other individuals and teams competing, we have set our goal at an RMSE of 18. 
 
 ### Linear Regression
@@ -348,49 +270,7 @@ We'll begin by establishing our baseline model with a simple linear regressor.
 
 Great, we have established our baseline. We may now move into optimizing this baseline so that we may test it against other models. 
 
-    RMSE Train: 20.4
-    RMSE Test: 21.07
-
-![png](README-images/output_75_1.png)
-
-
-It looks as though there is nothing to improve upon for the simple linear regressor. We will now progress on to more complex regression models, investigating whether we can improve on our original model. 
-
-### SGD Regression
-
-    RMSE Train: 20.4
-    RMSE Test: 21.07
-
-![png](README-images/output_82_1.png)
-
-
-No better than our plain-jane linear regressor. 
-
-### kNN Regressor
-
-    RMSE Train: 21.18
-    RMSE Test: 22.07
-
-![png](README-images/output_86_1.png)
-
-    RMSE Train: 20.46
-    RMSE Test: 21.27
-
-![png](README-images/output_90_1.png)
-
-It does not appear as though kNN is very promising for the task of simple regression here. 
-
-### Random Forest Regressor
-
-    RMSE Train: 20.07
-    RMSE Test: 21.33
-
-
-
-![png](README-images/output_94_1.png)
-
-
-Worse than our baseline, but we might be able to improve upon our model with some tuning of hyperparameters. 
+### Tuned Random Forest Regressor 
 
     RMSE Train: 20.4
     RMSE Test: 21.08
@@ -398,7 +278,7 @@ Worse than our baseline, but we might be able to improve upon our model with som
 ![png](README-images/output_99_1.png)
 
 
-Improved by .01 RMSE point compared to our baseline. It's progress! However, the difference in results from the baseline Random Forest and the tuned Random Forest indicates that we have not made any progress with respect to making more informed guessed per instance. In other words, deviation away from the mean has so far been punished, which shows that we are not making more intelligent guesses. Because simple regression models seem to be unpromising, we will move on to classification models at this time. If after exploring other models, regression seems the most promising still, then we may make some adjustments such as: pre- and post-scaling on our target; ensembling various models; re-examining feature importance, for the craft of more intelligent models. 
+Worse by .01 RMSE point compared to our baseline. It's progress! However, the difference in results from the baseline Random Forest and the tuned Random Forest indicates that we have not made any progress with respect to making more informed guessed per instance. In other words, deviation away from the mean has so far been punished, which shows that we are not making more intelligent guesses. Because simple regression models seem to be unpromising, we will move on to classification models at this time. If after exploring other models, regression seems the most promising still, then we may make some adjustments such as: pre- and post-scaling on our target; ensembling various models; re-examining feature importance, for the craft of more intelligent models. 
 
 ## Classification Modeling with Metadata
 
@@ -506,21 +386,9 @@ Since we have not been able to find a performant model, we will now take a new a
 
 For our undertaking, we have elected to use a pretrained ResNet50 on ImageNet data to classify our images. From there, we will check for trends between breeds and pawpularity. Finally, we will feature engineer to create new columns so that they are interpretable by a model. 
 
+This DataFrame represents the top 5 objects from a list of 1000 different items that ResNet50-ImageNet is trained to classify. In the case of index 0, we can interpret this as that ResNet50 thinks that it is most likwly a West_Highland_white_terrier, second most likely to be a toy_poodle, and so on. 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -583,25 +451,10 @@ For our undertaking, we have elected to use a pretrained ResNet50 on ImageNet da
 </table>
 </div>
 
-
-
-This DataFrame represents the top 5 objects from a list of 1000 different items that ResNet50-ImageNet is trained to classify. In the case of index 0, we can interpret this as that ResNet50 thinks that it is most liekly a West_Highland_white_terrier, second most likely to be a toy_poodle, and so on. 
-
+This DataFrame represents the probability of outcome, rather, the certainty that ResNet50 has for each of its predictions. Again, in the case of the index 0, we can interpret this as that ResNet50 is 23.1% confident that the image is that of a West_Highland_white_terrier, 21.7% confident that it's an image of a toy_poodle, and so on. 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -665,128 +518,17 @@ This DataFrame represents the top 5 objects from a list of 1000 different items 
 </div>
 
 
-
-This DataFrame represents the probability of outcome, rather, the certainty that ResNet50 has for each of its predictions. Again, in the case of the index 0, we can interpret this as that ResNet50 is 23.1% confident that the image is that of a West_Highland_white_terrier, 21.7% confident that it's an image of a toy_poodle, and so on. 
-
-
 Additionally, it is not important whether ResNet gets the classification correct - it would be nice and perhaps beneficial to always be able to tell the breed of dog or cat, but that is not as important as achieving model consistency. Think of it in terms of someone's name: If everyone in a room of 50 believes that the name of a hypothetical person is 'James', but it is in fact 'Louis', it doesn't matter that the group refers to him as James because they all know exactly who they are talking about. 
 
 It should be noted, that ResNet also can guess that the image is of something other than a dog. For example on index 1, we can see that the second highest prediction is for that of a mosquito net. While it may seem counterituitive to include this data, we believe it to be useful: If ResNet thinks predicts that the image is a paper_towel, that must mean that the image is of not so high a quality... which we can see demonstrated below.
 
 
-
-
 ![png](README-images/output_126_0.png)
 
 
-
-Now, we will move on to transforming our data into usable features. We begin with the easiest part, inspecting the numerical data to look for correlations - perhaps the instances where ResNet is most sure of an outcome, are the most attractive images...
-
-
+We will start by building a DataFrame with all the represented animals/objects in the predictions, along with their value counts. 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>prob1</th>
-      <th>prob2</th>
-      <th>prob3</th>
-      <th>prob4</th>
-      <th>prob5</th>
-      <th>Pawpularity</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>prob1</th>
-      <td>1.000000</td>
-      <td>-0.306037</td>
-      <td>-0.560798</td>
-      <td>-0.675847</td>
-      <td>-0.728163</td>
-      <td>-0.000684</td>
-    </tr>
-    <tr>
-      <th>prob2</th>
-      <td>-0.306037</td>
-      <td>1.000000</td>
-      <td>0.441001</td>
-      <td>0.174770</td>
-      <td>0.033360</td>
-      <td>0.005526</td>
-    </tr>
-    <tr>
-      <th>prob3</th>
-      <td>-0.560798</td>
-      <td>0.441001</td>
-      <td>1.000000</td>
-      <td>0.643634</td>
-      <td>0.448147</td>
-      <td>-0.004060</td>
-    </tr>
-    <tr>
-      <th>prob4</th>
-      <td>-0.675847</td>
-      <td>0.174770</td>
-      <td>0.643634</td>
-      <td>1.000000</td>
-      <td>0.777043</td>
-      <td>0.002592</td>
-    </tr>
-    <tr>
-      <th>prob5</th>
-      <td>-0.728163</td>
-      <td>0.033360</td>
-      <td>0.448147</td>
-      <td>0.777043</td>
-      <td>1.000000</td>
-      <td>0.013884</td>
-    </tr>
-    <tr>
-      <th>Pawpularity</th>
-      <td>-0.000684</td>
-      <td>0.005526</td>
-      <td>-0.004060</td>
-      <td>0.002592</td>
-      <td>0.013884</td>
-      <td>1.000000</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-Since the probabilities do not seem to display significant correlation with our target feature, we will put them to the side for now and move on to developing a strategy for utilising the image classification data. We will start by building a DataFrame with all the represented animals/objects in the predictions, along with their value counts. 
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -925,7 +667,7 @@ We will now move back into the modeling process, where our new data will hopeful
 
 ## Modeling with Engineered Features
 
-### Linear Regressor
+### Baseline Linear Regressor
 
 
     RMSE Train: 17.97
@@ -945,27 +687,6 @@ We will now move back into the modeling process, where our new data will hopeful
 
 
 ![png](README-images/output_153_1.png)
-
-
-### Random Forest Regressor
-
-    RMSE Train: 16.51
-    RMSE Test: 18.77
-
-
-
-![png](README-images/output_155_1.png)
-
-
-### XGBoost
-
-    RMSE Train: 14.99
-    RMSE Test: 18.92
-
-
-
-![png](README-images/output_158_1.png)
-
 
 ## Evaluation
 
