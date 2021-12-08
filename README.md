@@ -706,3 +706,17 @@ We should make note of several research oppportunities and areas for improvement
 4. Further algorithm optimisations. We need to implement for robust gridsearches, but we were clipped on time. Almost certainly, we could reduce our RMSE by a tenth of a point with a grid search. 
 5. Beauty theory / Photography theory. For example, humans are often judged for beauty based on the symmetry of our faces. What if the same could be said for dogs? Additionally, good photographs contain certain elements taught in design disciplines. We might test to see if the color is balanced, or if there are stark contrasts, etc., throughout the photos, and we could then test to see if it correlates with a higher pawpularity score. 
 6. More powerful models. We tried to keep the modeling as simple as possible to maximize interpretability, but may have sacrificed a few points of RMSE in the process. 
+
+## Repo Structure
+```
+├── README-images
+├── data
+├── notebook-images
+├── .gitignore
+├── README.md
+├── df_html.html
+├── environment.yml
+├── pet-pawpularity-contest.ipynb
+├── pet-pawpularity-presentation.pdf
+└── requirements.txt
+```
